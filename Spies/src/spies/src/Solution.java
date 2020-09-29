@@ -4,11 +4,10 @@ import java.util.*;
 
 public class Solution {
     
-    private static int SolutionSize = 13;
+    private static int SolutionSize = 25;
 
     public static void main(String[] args) {
         
-        Grid grid = new Grid(SolutionSize);
        /* grid.insertSpy(0, 0);
         grid.display();
         grid.insertSpy(1, 2);
@@ -23,25 +22,53 @@ public class Solution {
         grid.insertSpy(10, 8);
         grid.insertSpy(11, 3);
         grid.insertSpy(12, 5);*/
+        
+        Date start = new Date();
+        
         HashMap<Integer,Integer> iterations = new HashMap<Integer,Integer>();
         for(int i =0; i <SolutionSize;i++) {
             iterations.put(i,0);
         }
-        iterations.put(2, 6);
+        
+        int nbSpies = 0;
+        int choice = 0;
+        
+       /* iterations.put(2, 6);
         iterations.put(3, 4);
         iterations.put(4, 2);
-        iterations.put(6, 1);
-        int choice = fillGrid(grid,iterations);
+        iterations.put(6, 1);*/
+        Grid grid = null;
+        int ite = 0;
+        while(choice>=0 && nbSpies<SolutionSize) {
+
+            grid = new Grid(SolutionSize);
+            choice = fillGrid(grid,iterations);
+            nbSpies = grid.getNbSpies();
+            if(choice>=0) {
+                ite = iterations.get(choice);
+                iterations.put(choice, ite+1);
+                for(int i = choice + 1; i<SolutionSize; i++) {
+                    iterations.put(i, 0);
+                }
+            }
+        }
+        
+        Date end = new Date();
+        
+        long timeInMilis = end.getTime()-start.getTime();
+        
         grid.display();
-        System.out.println(grid.getNbSpies());
-        System.out.println(choice);
+        grid.displaySolution();
+        System.out.println("number of spies : " +nbSpies);
+        System.out.println(nbSpies==SolutionSize? "SUCCESS": "FAILURE");
+        System.out.println("time in miliseconds : "+timeInMilis);
         
         
     }
     
     private static int fillGrid(Grid grid,HashMap<Integer,Integer> iterations) {
         int nb = 0;
-        int choice = 0;
+        int choice = -1;
         int it = 0;
         int j = 0 ;
         for(int i=0;i<grid.size();i++) {
@@ -261,6 +288,18 @@ public class Solution {
                     square.display();
                 }
                 System.out.println();
+            }
+            System.out.println();
+        }
+        
+        public void displaySolution()
+        {
+            for(ArrayList<Square>line : squares) {
+                for(Square square : line) {
+                    if(square.getState()==SquareState.OCCUPIED) {
+                        System.out.print(square.getJ()+1+" ");
+                    }
+                }
             }
             System.out.println();
         }
