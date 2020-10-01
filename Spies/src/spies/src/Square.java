@@ -25,10 +25,10 @@ public class Square
     {
         return i;
     }
-   /* public void setI(int i)
+    public void setI(int i)
     {
         this.i = i;
-    }*/
+    }
     public int getJ()
     {
         return j;
