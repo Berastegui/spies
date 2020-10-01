@@ -4,9 +4,10 @@ import java.util.*;
 
 public class Solution {
     
-    private static int SolutionSize = 4;
+    private static int SolutionSize = 11;
     
     private static ArrayList<Grid> oneGrids;
+    private static ArrayList<Grid2> oneGrid2s;
 
     public static void main(String[] args) {
         
@@ -16,7 +17,9 @@ public class Solution {
         
         //Grid grid = secondTry();
         
-        Grid2 grid = new Grid2(SolutionSize);
+        Grid2 grid = thirdTry();
+        
+        /*Grid2 grid = new Grid2(SolutionSize);
         Grid2 grid2 = new Grid2(SolutionSize);
         
         grid.insertSpy(1);
@@ -24,15 +27,15 @@ public class Solution {
         grid2.insertSpy(0);
         grid2.insertSpy(2);
         
-        Grid2 grid3 = grid.merge(grid2);
+        Grid2 grid3 = grid.merge(grid2);*/
         
         Date end = new Date();
         
         long timeInMilis = end.getTime()-start.getTime();
         
-        grid3.display();
-        grid3.displaySolution();
-        int nbSpies = grid3.getNbSpies();
+        grid.display();
+        grid.displaySolution();
+        int nbSpies = grid.getNbSpies();
         System.out.println("number of spies : " +nbSpies);
         System.out.println(nbSpies==SolutionSize? "SUCCESS": "FAILURE");
         System.out.println("time in miliseconds : "+timeInMilis);
@@ -67,6 +70,26 @@ public class Solution {
         return grid;
     }
     
+    private static Grid2 thirdTry() {
+        
+        oneGrid2s = new ArrayList<Grid2>();
+        
+        for(int i = 0; i<SolutionSize;i++) {
+            Grid2 grid = new Grid2(SolutionSize);
+            grid.insertSpy(i);
+            oneGrid2s.add(grid);
+        }
+        
+        ArrayList<Grid2> solutions = getGrid2s(SolutionSize);
+        
+        if(solutions.isEmpty()) {
+            return new Grid2(SolutionSize);
+        }
+        
+        return solutions.get(0);
+        
+    }
+    
     private static Grid secondTry() {
         
         oneGrids = new ArrayList<Grid>();
@@ -88,6 +111,48 @@ public class Solution {
         
         return solutions.get(0);
         
+    }
+    
+    private static ArrayList<Grid2> getGrid2s(int n){
+        if(n==1) {
+            return oneGrid2s;
+        }
+        
+        if(n==0) {
+            return new ArrayList<Grid2>();
+        }
+        ArrayList<Grid2> grids = getGrid2s(n/2);
+        ArrayList<Grid2> result = new ArrayList<Grid2>();
+        
+        int nbG = grids.size();
+        
+        Grid2 grid1, grid2;
+        
+        for(int k1 = 0 ; k1<nbG; k1++) {
+            grid1 = grids.get(k1);
+            for(int k2 = 0 ; k2<nbG; k2++) {
+                grid2 = grids.get(k2);
+                Grid2 grid3 = grid1.merge(grid2);
+                if(grid3!=null && grid3.getNbSpies()==2*(n/2)) {
+                    result.add(grid3);
+                }
+            }
+        }
+        if(n%2==0) {
+            return result;
+        }
+        
+        ArrayList<Grid2> result2 = new ArrayList<Grid2>();
+        
+        for(Grid2 grid : result) {
+            for(Grid2 grid4 : oneGrid2s) {
+                Grid2 grid3 = grid.merge(grid4);
+                if(grid3!=null) {
+                    result2.add(grid3);
+                }
+            }
+        }
+        return result2;
     }
     
     private static ArrayList<Grid> getGrids(int n){

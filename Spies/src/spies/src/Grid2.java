@@ -155,14 +155,22 @@ public class Grid2
         if(size()!=grid.size()) {
             return false;
         }
-        int nbSpies = getNbSpies();
+        int nbSpies = grid.getNbSpies();
         for(Square square : grid.occupiedSquares) {
+            /*if(square.getI()+nbSpies>=squares.size()) {
+                display();
+                grid.display();
+            }*/
             if(get(square.getI()+nbSpies, square.getJ()).getState()!=SquareState.FREE) {
                 return false;
             }
         }
-        nbSpies = grid.getNbSpies();
+        //nbSpies = getNbSpies();
         for(Square square : occupiedSquares) {
+            /*if(square.getI()-nbSpies<=0) {
+                display();
+                grid.display();
+            }*/
             if(grid.get(square.getI()-nbSpies, square.getJ()).getState()!=SquareState.FREE) {
                 return false;
             }
